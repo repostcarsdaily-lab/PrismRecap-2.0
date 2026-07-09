@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { createCollectionItem, createNamedCollectionItem, FIRESTORE_COLLECTIONS } from '../services/firebase';
+import { createTaskFromGroqAction } from '../services/kanban';
 
 const initialResult = {
   executiveSummary: '',
@@ -208,13 +209,20 @@ function MeetingProcessingPage() {
         createdAt: new Date().toISOString(),
       });
 
-      await createCollectionItem(FIRESTORE_COLLECTIONS.tasks, {
-        meetingId,
-        title: parsed.actionItems[0] || 'Review meeting output',
-        status: 'Pending',
-        assignee: parsed.assignees[0] || 'Team',
-        dueDate: parsed.deadlines[0] || 'TBD',
-      });
+      const actionItems = parsed.actionItems.map((item, index) => ({
+        title: item,
+        description: `Created from meeting ${meetingId}`,
+        priority: ['Low', 'Medium', 'High', 'Critical'][index % 4],
+        department: profile?.department || 'Product',
+        assignee: parsed.assignees[index] || profile?.name || 'Unassigned',
+        dueDate: parsed.deadlines[index] || '',
+        labels: parsed.keyHighlights[index] ? parsed.keyHighlights[index].split(' ').slice(0, 3).join(', ') : 'ai-generated',
+      }));
+
+      for (const action of actionItems) {
+        const taskPayload = createTaskFromGroqAction(action, meetingId, profile);
+        await createCollectionItem(FIRESTORE_COLLECTIONS.tasks, taskPayload);
+      }
 
       setRetryCount(0);
     } catch (err) {
@@ -284,6 +292,7 @@ function MeetingProcessingPage() {
             <button className="primary-btn" type="button" onClick={processMeeting} disabled={isProcessing || !canProcess}>
               {isProcessing ? 'Processing...' : 'Process Meeting'}
             </button>
+            <button className="secondary-btn" type="button" onClick={() => navigate('/kanban')}>Open Kanban</button>
             {retryCount > 0 && <span className="profile-pill">Retry attempts: {retryCount}</span>}
           </div>
           {error ? <p className="auth-message">{error}</p> : null}
