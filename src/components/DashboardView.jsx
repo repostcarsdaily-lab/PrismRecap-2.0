@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const translations = {
@@ -36,6 +37,7 @@ const translations = {
     actionUploadTranscript: 'Upload Transcript',
     actionOpenKanban: 'Open Kanban',
     actionEmailCenter: 'Email Center',
+    actionAnalytics: 'Analytics',
     meetingLabel: 'Meeting',
     taskLabel: 'Task',
     activityLabel: 'Activity',
@@ -75,6 +77,7 @@ const translations = {
     actionUploadTranscript: 'Enviar Transcrição',
     actionOpenKanban: 'Abrir Kanban',
     actionEmailCenter: 'Centro de E-mails',
+    actionAnalytics: 'Análises',
     meetingLabel: 'Reunião',
     taskLabel: 'Tarefa',
     activityLabel: 'Atividade',
@@ -192,6 +195,7 @@ function ProductivityBars({ data, labels }) {
 }
 
 function DashboardView() {
+  const navigate = useNavigate();
   const { profile, logout } = useAuth();
   const [theme, setTheme] = useState(() => localStorage.getItem('prism-theme') || 'light');
   const [language, setLanguage] = useState(() => localStorage.getItem('prism-language') || 'en');
@@ -235,10 +239,11 @@ function DashboardView() {
   ];
 
   const actions = [
-    t.actionNewMeeting,
-    t.actionUploadTranscript,
-    t.actionOpenKanban,
-    t.actionEmailCenter,
+    { label: t.actionNewMeeting, route: '/meeting-processing' },
+    { label: t.actionUploadTranscript, route: '/meeting-processing' },
+    { label: t.actionOpenKanban, route: '/kanban' },
+    { label: t.actionEmailCenter, route: '/email-center' },
+    { label: t.actionAnalytics, route: '/analytics' },
   ];
 
   return (
@@ -280,6 +285,28 @@ function DashboardView() {
             <div className="summary-pill">{t.summaryLabel}</div>
             <div className="summary-value">{t.summaryValue}</div>
             <p>{t.summaryHint}</p>
+          </div>
+        </section>
+
+        <section className="panel">
+          <div className="panel-header">
+            <h3>Workspace navigation</h3>
+          </div>
+          <div className="workspace-nav-grid">
+            {[
+              { label: 'Dashboard', route: '/dashboard' },
+              { label: 'Meeting Processing', route: '/meeting-processing' },
+              { label: 'Meeting History', route: '/meeting-history' },
+              { label: 'Kanban', route: '/kanban' },
+              { label: 'Email Center', route: '/email-center' },
+              { label: 'Team Chat', route: '/team-chat' },
+              { label: 'Notifications', route: '/notifications' },
+              { label: 'Analytics', route: '/analytics' },
+            ].map((item) => (
+              <button key={item.route} className="action-btn" type="button" onClick={() => navigate(item.route)}>
+                {item.label}
+              </button>
+            ))}
           </div>
         </section>
 
@@ -358,8 +385,8 @@ function DashboardView() {
             <PanelHeader title={t.quickActions} />
             <div className="action-grid">
               {actions.map((action) => (
-                <button key={action} className="action-btn" type="button">
-                  {action}
+                <button key={action.label} className="action-btn" type="button" onClick={() => navigate(action.route)}>
+                  {action.label}
                 </button>
               ))}
             </div>

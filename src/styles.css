@@ -125,6 +125,7 @@ button { font: inherit; }
 .activity-list li { justify-content: flex-start; align-items: flex-start; }
 .dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #7c3aed); flex-shrink: 0; margin-top: 6px; }
 .action-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.workspace-nav-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
 .action-btn { padding: 14px 12px; text-align: left; border-radius: 16px; }
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .panel-header a { color: #2563eb; text-decoration: none; font-size: 0.9rem; }
@@ -362,7 +363,7 @@ button { font: inherit; }
   .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero { padding: 20px; }
   .item-list li, .activity-list li { flex-direction: column; align-items: flex-start; }
-  .action-grid { grid-template-columns: 1fr; }
+  .action-grid, .workspace-nav-grid { grid-template-columns: 1fr; }
   .upload-grid { grid-template-columns: 1fr; }
   .filter-grid, .modal-grid, .kanban-board { grid-template-columns: 1fr; }
   .analytics-grid .filter-grid { grid-template-columns: 1fr; }
