@@ -188,6 +188,37 @@ button { font: inherit; }
   font-size: 1.1rem;
   color: #475569;
 }
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.upload-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  background: rgba(248, 250, 252, 0.8);
+}
+.upload-card textarea {
+  min-height: 160px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 14px;
+  padding: 12px;
+  resize: vertical;
+  font: inherit;
+  background: white;
+}
+.upload-card input[type="file"] {
+  border: 1px dashed rgba(37, 99, 235, 0.35);
+  border-radius: 14px;
+  padding: 10px;
+  background: white;
+}
+.upload-card small { color: #64748b; }
+.recording-actions { display: flex; gap: 10px; }
 @media (max-width: 1100px) {
   .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .charts-grid, .content-grid { grid-template-columns: 1fr; }
@@ -201,6 +232,7 @@ button { font: inherit; }
   .hero { padding: 20px; }
   .item-list li, .activity-list li { flex-direction: column; align-items: flex-start; }
   .action-grid { grid-template-columns: 1fr; }
+  .upload-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr; }

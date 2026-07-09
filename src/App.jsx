@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import DashboardView from './components/DashboardView';
 import AuthPages from './components/AuthPages';
+import MeetingProcessingPage from './components/MeetingProcessingPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -13,6 +14,7 @@ function App() {
           <Route path="/auth" element={<AuthPages />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<DashboardView />} />
+            <Route path="/meeting-processing" element={<MeetingProcessingPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/auth" replace />} />
         </Routes>
