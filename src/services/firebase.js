@@ -82,6 +82,19 @@ export async function updateUserProfile(data) {
   await updateDoc(userRef, { ...data, updatedAt: serverTimestamp() });
 }
 
+export async function createNotification({ title, message, type = 'System', userId, ...data }) {
+  const ref = await addDoc(collection(db, FIRESTORE_COLLECTIONS.notifications), {
+    title,
+    message,
+    type,
+    read: false,
+    userId: userId || auth.currentUser?.uid || 'guest',
+    createdAt: new Date().toISOString(),
+    ...data,
+  });
+  return ref.id;
+}
+
 export async function createCollectionItem(collectionName, data) {
   const ref = await addDoc(collection(db, collectionName), {
     ...data,

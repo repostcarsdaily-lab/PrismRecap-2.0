@@ -6,6 +6,8 @@ import KanbanBoard from './components/KanbanBoard';
 import MeetingHistoryPage from './components/MeetingHistoryPage';
 import EmailCenterPage from './components/EmailCenterPage';
 import TeamChatPage from './components/TeamChatPage';
+import NotificationCenterPage from './components/NotificationCenterPage';
+import AnalyticsPage from './components/AnalyticsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -22,6 +24,8 @@ function App() {
             <Route path="/meeting-history" element={<MeetingHistoryPage />} />
             <Route path="/email-center" element={<EmailCenterPage />} />
             <Route path="/team-chat" element={<TeamChatPage />} />
+            <Route path="/notifications" element={<NotificationCenterPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/kanban" element={<KanbanBoard />} />
           </Route>
           <Route path="*" element={<Navigate to="/auth" replace />} />

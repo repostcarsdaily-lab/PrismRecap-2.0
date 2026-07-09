@@ -314,6 +314,13 @@ button { font: inherit; }
 .history-card-header { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
 .history-card h3 { margin: 0; }
 .history-card p { margin: 4px 0 0; color: #64748b; }
+.unread-card { border-left: 4px solid #2563eb; }
+.notification-bell { position: relative; }
+.notification-badge { position: absolute; top: -4px; right: -4px; background: #dc2626; color: white; border-radius: 999px; font-size: 0.7rem; padding: 2px 6px; }
+.notification-popover { position: fixed; top: 76px; right: 24px; width: min(320px, calc(100vw - 24px)); display: grid; gap: 8px; z-index: 60; }
+.toast-card { position: fixed; bottom: 18px; right: 18px; background: rgba(15,23,42,0.95); color: white; border-radius: 16px; padding: 12px 14px; display: grid; gap: 6px; z-index: 70; }
+.preference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.preference-pill { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 14px; background: rgba(248,250,252,0.8); }
 .chat-shell { display: grid; grid-template-columns: 320px 1fr; gap: 16px; }
 .chat-sidebar { display: grid; gap: 8px; align-self: start; }
 .channel-list { display: grid; gap: 8px; }
@@ -322,6 +329,10 @@ button { font: inherit; }
 .counter { background: rgba(37,99,235,0.12); color: #1d4ed8; border-radius: 999px; padding: 3px 8px; font-size: 0.8rem; }
 .channel-item.active .counter { background: rgba(255,255,255,0.2); color: white; }
 .notification-pill { padding: 8px 10px; border-radius: 12px; background: rgba(248,250,252,0.8); color: #475569; font-size: 0.85rem; }
+.analytics-grid { display: grid; gap: 16px; }
+.analytics-grid .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.analytics-grid .chart-panel { min-height: 260px; }
+.analytics-grid .filter-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .chat-main { display: grid; gap: 12px; }
 .chat-message-list { display: grid; gap: 10px; min-height: 320px; }
 .chat-message { background: rgba(248,250,252,0.8); border: 1px solid rgba(15,23,42,0.08); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
@@ -340,6 +351,7 @@ button { font: inherit; }
 @media (max-width: 720px) { .composer-row { grid-template-columns: 1fr; } }
 @media (max-width: 1100px) {
   .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .analytics-grid .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .charts-grid, .content-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
@@ -353,6 +365,7 @@ button { font: inherit; }
   .action-grid { grid-template-columns: 1fr; }
   .upload-grid { grid-template-columns: 1fr; }
   .filter-grid, .modal-grid, .kanban-board { grid-template-columns: 1fr; }
+  .analytics-grid .filter-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr; }

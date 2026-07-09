@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
-import { createCollectionItem, createNamedCollectionItem, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
+import { createCollectionItem, createNamedCollectionItem, createNotification, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
 import { createTaskFromGroqAction } from '../services/kanban';
 
 const initialResult = {
@@ -250,6 +250,14 @@ function MeetingProcessingPage() {
       await updateDoc(doc(db, FIRESTORE_COLLECTIONS.meetingHistory, meetingId), {
         linkedKanbanTasks: linkedTasks,
         updatedAt: new Date().toISOString(),
+      });
+
+      await createNotification({
+        title: 'Meeting processed',
+        message: `Your meeting summary is ready with ${linkedTasks.length} action items queued for follow-up.`,
+        type: 'Meeting',
+        userId: profile?.uid || 'guest',
+        meetingId,
       });
 
       setRetryCount(0);

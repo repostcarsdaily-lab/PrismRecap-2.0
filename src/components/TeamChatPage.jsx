@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { useAuth } from '../context/AuthContext';
-import { db, FIRESTORE_COLLECTIONS } from '../services/firebase';
+import { createNotification, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
 import ChatSidebar from './chat/ChatSidebar';
 import ChatMessageList from './chat/ChatMessageList';
 import ChatComposer from './chat/ChatComposer';
@@ -127,11 +127,24 @@ function TeamChatPage() {
         replyTo: replyTo ? `${replyTo.senderName}: ${replyTo.text}` : null,
       };
       await addDoc(collection(db, FIRESTORE_COLLECTIONS.messages), payload);
-      if (replyTo) {
-        await addDoc(collection(db, FIRESTORE_COLLECTIONS.notifications), {
-          message: `${currentUserName} replied to a message`,
-          createdAt: new Date().toISOString(),
+      if (replyTo || payload.mentions.length) {
+        const targets = [];
+        if (replyTo?.senderId) {
+          targets.push(replyTo.senderId);
+        }
+        payload.mentions.forEach((mention) => {
+          const match = users.find((user) => user.name?.toLowerCase() === mention.toLowerCase());
+          if (match?.id) {
+            targets.push(match.id);
+          }
         });
+        const uniqueTargets = [...new Set(targets.filter(Boolean))];
+        await Promise.all(uniqueTargets.map((targetId) => createNotification({
+          title: payload.mentions.length ? 'Mentioned in chat' : 'Reply in chat',
+          message: payload.mentions.length ? `${currentUserName} mentioned you in ${activeChannel}` : `${currentUserName} replied to your message`,
+          type: 'Chat',
+          userId: targetId,
+        })));
       }
       setDraft('');
       setAttachments([]);

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
-import { createCollectionItem, createNamedCollectionItem, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
+import { createCollectionItem, createNamedCollectionItem, createNotification, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
 
 const TEMPLATE_OPTIONS = [
   { id: 'meeting-summary', label: 'Meeting Summary', subject: 'Meeting Summary Update', body: '<p>Hello team,</p><p>Please review the latest meeting highlights and next steps below.</p><ul><li>Executive summary</li><li>Key decisions</li><li>Action items</li></ul>' },
@@ -134,10 +134,22 @@ function EmailCenterPage() {
         sentAt: new Date().toISOString(),
         deliveryId: result.id || '',
       });
+      await createNotification({
+        title: 'Email delivered',
+        message: `Your message to ${emailRecipients.join(', ')} was sent successfully.`,
+        type: 'Email',
+        userId: profile?.uid || 'guest',
+      });
     } catch (err) {
       await updateDoc(doc(db, FIRESTORE_COLLECTIONS.emailHistory, entryId), {
         status: 'Failed',
         errorMessage: err.message || 'Delivery failed',
+      });
+      await createNotification({
+        title: 'Email delivery failed',
+        message: err.message || 'Your email could not be sent.',
+        type: 'Email',
+        userId: profile?.uid || 'guest',
       });
       setError(err.message || 'Email failed to send');
     } finally {
@@ -167,6 +179,12 @@ function EmailCenterPage() {
       await updateDoc(doc(db, FIRESTORE_COLLECTIONS.emailHistory, entry.id), {
         status: 'Delivered',
         resentAt: new Date().toISOString(),
+      });
+      await createNotification({
+        title: 'Email resent',
+        message: `Your message to ${entry.recipient} was resent successfully.`,
+        type: 'Email',
+        userId: profile?.uid || 'guest',
       });
     } catch (err) {
       setError(err.message || 'Resend failed');
