@@ -306,6 +306,14 @@ button { font: inherit; }
 .pagination-controls span { color: #475569; }
 .empty-state { text-align: center; color: #64748b; }
 .meeting-modal .content-grid { margin-top: 12px; }
+.email-editor-shell { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; margin-top: 16px; }
+.rich-text-editor { min-height: 220px; border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 14px; padding: 12px; resize: vertical; font: inherit; background: white; }
+.attachment-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.history-list { display: grid; gap: 12px; margin-top: 14px; }
+.history-card { background: rgba(255,255,255,0.95); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 18px; padding: 14px; display: grid; gap: 10px; }
+.history-card-header { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.history-card h3 { margin: 0; }
+.history-card p { margin: 4px 0 0; color: #64748b; }
 @media (max-width: 1100px) {
   .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .charts-grid, .content-grid { grid-template-columns: 1fr; }

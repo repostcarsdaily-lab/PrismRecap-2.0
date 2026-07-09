@@ -4,6 +4,7 @@ import AuthPages from './components/AuthPages';
 import MeetingProcessingPage from './components/MeetingProcessingPage';
 import KanbanBoard from './components/KanbanBoard';
 import MeetingHistoryPage from './components/MeetingHistoryPage';
+import EmailCenterPage from './components/EmailCenterPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -18,6 +19,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/meeting-processing" element={<MeetingProcessingPage />} />
             <Route path="/meeting-history" element={<MeetingHistoryPage />} />
+            <Route path="/email-center" element={<EmailCenterPage />} />
             <Route path="/kanban" element={<KanbanBoard />} />
           </Route>
           <Route path="*" element={<Navigate to="/auth" replace />} />
