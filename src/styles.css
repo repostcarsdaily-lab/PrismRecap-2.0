@@ -314,6 +314,30 @@ button { font: inherit; }
 .history-card-header { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
 .history-card h3 { margin: 0; }
 .history-card p { margin: 4px 0 0; color: #64748b; }
+.chat-shell { display: grid; grid-template-columns: 320px 1fr; gap: 16px; }
+.chat-sidebar { display: grid; gap: 8px; align-self: start; }
+.channel-list { display: grid; gap: 8px; }
+.channel-item { display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 14px; padding: 10px 12px; background: rgba(255,255,255,0.9); text-align: left; cursor: pointer; }
+.channel-item.active { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; }
+.counter { background: rgba(37,99,235,0.12); color: #1d4ed8; border-radius: 999px; padding: 3px 8px; font-size: 0.8rem; }
+.channel-item.active .counter { background: rgba(255,255,255,0.2); color: white; }
+.notification-pill { padding: 8px 10px; border-radius: 12px; background: rgba(248,250,252,0.8); color: #475569; font-size: 0.85rem; }
+.chat-main { display: grid; gap: 12px; }
+.chat-message-list { display: grid; gap: 10px; min-height: 320px; }
+.chat-message { background: rgba(248,250,252,0.8); border: 1px solid rgba(15,23,42,0.08); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
+.chat-message.mine { background: rgba(37,99,235,0.08); }
+.chat-message-header { display: flex; justify-content: space-between; gap: 12px; color: #475569; font-size: 0.85rem; }
+.chat-action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.reply-pill, .mention-pill { color: #64748b; font-size: 0.85rem; }
+.chat-composer { display: grid; gap: 10px; }
+.composer-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+.typing-indicator { color: #64748b; margin: 0; }
+.reaction-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.status-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; }
+.status-dot.online { background: #22c55e; }
+.status-dot.offline { background: #94a3b8; }
+@media (max-width: 980px) { .chat-shell { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .composer-row { grid-template-columns: 1fr; } }
 @media (max-width: 1100px) {
   .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .charts-grid, .content-grid { grid-template-columns: 1fr; }
