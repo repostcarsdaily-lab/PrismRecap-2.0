@@ -1,7 +1,7 @@
 import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { createCollectionItem, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
 import { collection, deleteDoc, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
@@ -30,6 +30,7 @@ const createEmptyTask = (profile) => ({
 
 function KanbanBoard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { profile, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState('');
@@ -44,6 +45,18 @@ function KanbanBoard() {
   useEffect(() => {
     setDraft(createEmptyTask(profile));
   }, [profile]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const taskId = params.get('taskId');
+    if (!taskId || !tasks.length) return;
+    const matchedTask = tasks.find((task) => task.id === taskId);
+    if (matchedTask && (!activeTask || activeTask.id !== matchedTask.id)) {
+      setActiveTask(matchedTask);
+      setDraft(matchedTask);
+      setModalOpen(true);
+    }
+  }, [location.search, tasks, activeTask]);
 
   useEffect(() => {
     const q = query(collection(db, FIRESTORE_COLLECTIONS.tasks), orderBy('updatedAt', 'desc'));

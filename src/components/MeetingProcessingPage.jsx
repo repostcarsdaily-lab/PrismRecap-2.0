@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
-import { createCollectionItem, createNamedCollectionItem, FIRESTORE_COLLECTIONS } from '../services/firebase';
+import { createCollectionItem, createNamedCollectionItem, db, FIRESTORE_COLLECTIONS } from '../services/firebase';
 import { createTaskFromGroqAction } from '../services/kanban';
 
 const initialResult = {
@@ -203,11 +204,31 @@ function MeetingProcessingPage() {
         createdAt: new Date().toISOString(),
       });
 
-      await createNamedCollectionItem(FIRESTORE_COLLECTIONS.meetingHistory, meetingId, {
+      const meetingRecord = {
+        meetingId,
         title: 'Processed Meeting',
-        summary: parsed.executiveSummary,
+        dateTime: new Date().toISOString(),
+        participants: profile?.name ? [profile.name] : ['Team'],
+        department: profile?.department || 'Product',
+        transcript: finalTranscript,
+        executiveSummary: parsed.executiveSummary,
+        keyHighlights: parsed.keyHighlights,
+        decisions: parsed.decisionsMade,
+        actionItems: parsed.actionItems,
+        assignees: parsed.assignees,
+        deadlines: parsed.deadlines,
+        risks: parsed.risks,
+        openQuestions: parsed.openQuestions,
+        nextSteps: parsed.nextSteps,
+        linkedKanbanTasks: [],
+        status: 'Active',
+        archived: false,
+        pinned: false,
         createdAt: new Date().toISOString(),
-      });
+        createdBy: profile?.uid || 'anonymous',
+      };
+
+      await createNamedCollectionItem(FIRESTORE_COLLECTIONS.meetingHistory, meetingId, meetingRecord);
 
       const actionItems = parsed.actionItems.map((item, index) => ({
         title: item,
@@ -219,10 +240,17 @@ function MeetingProcessingPage() {
         labels: parsed.keyHighlights[index] ? parsed.keyHighlights[index].split(' ').slice(0, 3).join(', ') : 'ai-generated',
       }));
 
+      const linkedTasks = [];
       for (const action of actionItems) {
         const taskPayload = createTaskFromGroqAction(action, meetingId, profile);
-        await createCollectionItem(FIRESTORE_COLLECTIONS.tasks, taskPayload);
+        const taskId = await createCollectionItem(FIRESTORE_COLLECTIONS.tasks, taskPayload);
+        linkedTasks.push({ id: taskId, title: action.title, status: taskPayload.status || 'To Do' });
       }
+
+      await updateDoc(doc(db, FIRESTORE_COLLECTIONS.meetingHistory, meetingId), {
+        linkedKanbanTasks: linkedTasks,
+        updatedAt: new Date().toISOString(),
+      });
 
       setRetryCount(0);
     } catch (err) {
